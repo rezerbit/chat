@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  app:
+    container_name: chat-app
+    image: registry.rezerbit.com/chat/app
+    build:
+      context: ../
+      dockerfile: ./docker/app/Dockerfile
+    working_dir: /app
+    environment:
+      RAILS_ENV: $RAILS_ENV
+    command: /bin/sh -c "while true; do sleep 30; done"
+    volumes:
+      - ..:/app
+    depends_on:
+      - db
+
+  web:
+    container_name: chat-web
+    image: registry.rezerbit.com/chat/app
+    build:
+      context: ../
+      dockerfile: ./docker/app/Dockerfile
+    working_dir: /app
+    environment:
+      RAILS_ENV: $RAILS_ENV
+    command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
+    volumes:
+      - ..:/app
+    ports:
+      - 80:80
+    depends_on:
+      - db
+      - app
+
+  db:
+    container_name: chat-db
+    image: postgres:11
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+    ports:
+      - 5432:5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+volumes:
+  pg-data:
