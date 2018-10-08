@@ -25,11 +25,32 @@ services:
     working_dir: /app
     environment:
       RAILS_ENV: $RAILS_ENV
+      WEBPACKER_DEV_SERVER_HOST: webpack_dev_server
     command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
     volumes:
       - ..:/app
     ports:
       - 80:80
+    depends_on:
+      - db
+      - app
+      - webpack_dev_server
+
+  webpack_dev_server:
+    container_name: chat-webpack_dev_server
+    image: registry.rezerbit.com/chat/app
+    build:
+      context: ../
+      dockerfile: ./docker/app/Dockerfile
+    working_dir: /app
+    environment:
+      RAILS_ENV: $RAILS_ENV
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+    command: 'bash -c "bin/webpack-dev-server"'
+    volumes:
+      - ..:/app
+    ports:
+      - 3035:3035
     depends_on:
       - db
       - app
