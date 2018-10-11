@@ -12,7 +12,7 @@ services:
       RAILS_ENV: $RAILS_ENV
     command: /bin/sh -c "while true; do sleep 30; done"
     volumes:
-      - ..:/app
+      - app:/app:cached
     depends_on:
       - db
 
@@ -25,10 +25,11 @@ services:
     working_dir: /app
     environment:
       RAILS_ENV: $RAILS_ENV
+      NODE_ENV: development
       WEBPACKER_DEV_SERVER_HOST: webpack_dev_server
     command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
     volumes:
-      - ..:/app
+      - app:/app:cached
     ports:
       - 80:80
     depends_on:
@@ -45,10 +46,11 @@ services:
     working_dir: /app
     environment:
       RAILS_ENV: $RAILS_ENV
+      NODE_ENV: development
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
     command: 'bash -c "bin/webpack-dev-server"'
     volumes:
-      - ..:/app
+      - app:/app:cached
     ports:
       - 3035:3035
     depends_on:
@@ -66,4 +68,10 @@ services:
       - pg-data:/var/lib/postgresql/data
 
 volumes:
+  app:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=192.168.64.1,rw,nolock,hard,nointr,nfsvers=3
+      device: ":${PWD}/"
   pg-data:
