@@ -1,3 +1,2 @@
-document.body.insertAdjacentHTML("afterbegin", "Webpacker works!");
-
-console.log("It's work!");
+import "init";
+import "components/page/page";
