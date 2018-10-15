@@ -24,7 +24,7 @@ services:
       - nginx-front
       - default
     deploy:
-      replicas: 2
+      replicas: 1
       update_config:
         delay: 30s
       restart_policy:
