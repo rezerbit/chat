@@ -1,0 +1,68 @@
+version: "3"
+
+services:
+  web:
+    image: registry.rezerbit.com/chat/app
+    command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
+    ports:
+      - 80
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nginx-front
+      - default
+    deploy:
+      replicas: 2
+      update_config:
+        delay: 30s
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+  db:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER
+    ports:
+      - 5432:5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    networks:
+      - default
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+  redis:
+    image: redis:4-alpine
+    ports:
+      - 6379
+    volumes:
+      - redis-data:/data
+    networks:
+      - default
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+volumes:
+  pg-data:
+  redis-data:
+
+networks:
+  nginx-front:
+    external: true
