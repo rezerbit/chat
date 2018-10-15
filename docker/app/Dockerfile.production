@@ -4,7 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     curl --silent --location https://deb.nodesource.com/setup_9.x | bash - && \
-    apt-get install -qq -y --no-install-recommends build-essential nodejs npm && \
+    apt-get install -qq -y --no-install-recommends build-essential nodejs npm less vim && \
     npm install --global yarn
 RUN mkdir -p /app
 WORKDIR /app
@@ -15,4 +15,5 @@ ENV BUNDLE_PATH=/app/vendor/bundle \
 ENV PATH="${BUNDLE_BIN}:${PATH}"
 RUN gem update bundle || bundle check || bundle install --binstubs="$BUNDLE_BIN" \
     yarn install \
+    rake db:migrate \
     rake webpacker:compile
