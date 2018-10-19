@@ -10,7 +10,6 @@ docker/.env.prod
 .env.sample
 log
 tmp
-public/packs
 coverage/
 spec/
 
