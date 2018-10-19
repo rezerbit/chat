@@ -3,33 +3,34 @@ version: "3"
 services:
   app:
     container_name: chat-app
-    image: registry.rezerbit.com/chat/app
+    image: registry.rezerbit.com/chat/develop/app
     build:
       context: ../
       dockerfile: ./docker/app/Dockerfile
     working_dir: /app
     environment:
-      RAILS_ENV: $RAILS_ENV
+      RAILS_ENV: development
+      NODE_ENV: development
     command: /bin/sh -c "while true; do sleep 30; done"
     volumes:
-      - app:/app:cached
+      - app:/app
     depends_on:
       - db
 
   web:
     container_name: chat-web
-    image: registry.rezerbit.com/chat/app
+    image: registry.rezerbit.com/chat/develop/app
     build:
       context: ../
       dockerfile: ./docker/app/Dockerfile
     working_dir: /app
     environment:
-      RAILS_ENV: $RAILS_ENV
+      RAILS_ENV: development
       NODE_ENV: development
       WEBPACKER_DEV_SERVER_HOST: webpack_dev_server
     command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
     volumes:
-      - app:/app:cached
+      - app:/app
     ports:
       - 80:80
     depends_on:
@@ -45,12 +46,12 @@ services:
       dockerfile: ./docker/app/Dockerfile
     working_dir: /app
     environment:
-      RAILS_ENV: $RAILS_ENV
+      RAILS_ENV: development
       NODE_ENV: development
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
     command: 'bash -c "bin/webpack-dev-server"'
     volumes:
-      - app:/app:cached
+      - app:/app
     ports:
       - 3035:3035
     depends_on:
