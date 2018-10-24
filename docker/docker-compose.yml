@@ -40,7 +40,7 @@ services:
 
   webpack_dev_server:
     container_name: chat-webpack_dev_server
-    image: registry.rezerbit.com/chat/app
+    image: registry.rezerbit.com/chat/develop/app
     build:
       context: ../
       dockerfile: ./docker/app/Dockerfile

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   web:
-    image: registry.rezerbit.com/chat/app
+    image: registry.rezerbit.com/chat/production/app
     ports:
       - 80
     depends_on:
