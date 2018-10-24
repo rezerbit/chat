@@ -20,6 +20,7 @@ services:
       - REDIS_PORT
       - REDIS_URL
       - RAILS_SERVE_STATIC_FILES
+      - ALLOWED_REQUEST_ORIGINS
     command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
     networks:
       - nginx-front

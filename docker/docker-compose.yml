@@ -68,6 +68,13 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:4-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+
 volumes:
   app:
     driver: local
@@ -76,3 +83,4 @@ volumes:
       o: addr=192.168.64.1,rw,nolock,hard,nointr,nfsvers=3
       device: ":${PWD}/"
   pg-data:
+  redis-data:
