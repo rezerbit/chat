@@ -15,7 +15,7 @@ ENV BUNDLE_PATH=/app/vendor/bundle \
 ENV PATH="${BUNDLE_BIN}:${PATH}"
 ENV RAILS_ENV=production \
     NODE_ENV=production
-RUN gem update bundle || bundle check || bundle install --binstubs="$BUNDLE_BIN" \
-    yarn install \
-    rake db:migrate \
-    rake webpacker:compile
+RUN gem update bundle && bundle check && bundle install --binstubs="$BUNDLE_BIN" && \
+    yarn install && \
+    rake db:migrate && \
+    rm -rf public/packs && rake webpacker:compile
