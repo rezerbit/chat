@@ -13,7 +13,8 @@ services:
       NODE_ENV: development
     command: /bin/sh -c "while true; do sleep 30; done"
     volumes:
-      - app:/app
+      - ..:/app
+      - bundle_cache:/bundle
     depends_on:
       - db
 
@@ -30,7 +31,8 @@ services:
       WEBPACKER_DEV_SERVER_HOST: webpack_dev_server
     command: 'bash -c "rm -f /var/run/rails.pid && bundle exec rails s -b 0.0.0.0 -p 80 --pid /var/run/rails.pid"'
     volumes:
-      - app:/app
+      - ..:/app
+      - bundle_cache:/bundle
     ports:
       - 80:80
     depends_on:
@@ -51,7 +53,8 @@ services:
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
     command: 'bash -c "bin/webpack-dev-server"'
     volumes:
-      - app:/app
+      - ..:/app
+      - bundle_cache:/bundle
     ports:
       - 3035:3035
     depends_on:
@@ -76,11 +79,6 @@ services:
       - redis-data:/data
 
 volumes:
-  app:
-    driver: local
-    driver_opts:
-      type: nfs
-      o: addr=192.168.64.1,rw,nolock,hard,nointr,nfsvers=3
-      device: ":${PWD}/"
+  bundle_cache:
   pg-data:
   redis-data:
